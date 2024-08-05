@@ -26,15 +26,14 @@ Current working solution handles following thing,
 Customer: Test Store user
 Cart items: 
 -------------------
-P4 [GROCERY]: 5 x 80.0 = 400.0
+P4 [GROCERY]: 6 x 80.0 = 480.0
 P1 [BAKERY]: 2 x 250.0 = 500.0
--------------------
-Total: 900.0
-
-Discount 270.0 (Reason: Store emplyee discount 30 percentage of total value)
-Discount 45.0 (Reason: Existing customer (more than 2 years) gets 5 discount)
-Discount 20.0 (Reason: Discount of 5 for grocery category items for every 100 bill)
-
+-------------
+Total: 980.0
+Discount 150.0 (Reason: Store emplyee discount 30 percentage of non-grocery product value)
+Discount 25.0 (Reason: Existing customer (more than 2 years) gets 5 percentage discount)
+Additional Discount: 45.0 (Reason: Discount of 5 for all category items on every 100 bill value)
+Maximum discount: 195.0
 ==========================================
 ```
 
