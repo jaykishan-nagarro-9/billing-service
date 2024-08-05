@@ -47,6 +47,9 @@ Discount 20.0 (Reason: Discount of 5 for grocery category items for every 100 bi
 4. Cart: List of CartItem, Customer
 
 ## Filter implementation
+Class diagram for the filter implementation.
+![Class Diagram drawio](https://github.com/user-attachments/assets/e521a3a4-4a02-4c5d-87e2-4d72aff83d03)
+
 
 ## Coverage Report
 Code is covering 100% business lines from service layer. And overall 60+ % due to POJO/DTO etc has not covered fully.
