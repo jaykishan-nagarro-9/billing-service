@@ -15,6 +15,17 @@ public abstract class PercentageDiscount implements Discountable {
 		return value;
 	}
 	
+	/**
+	 * Calculates percentage value
+	 * 
+	 * @param productPrice
+	 * @param discount
+	 * @return
+	 */
+	protected double percentageOfProductValue(double productPrice, int discount) {
+		return (productPrice * discount)/100;
+	}
+	
 	@Override
 	public String discountDescription() {
 		return discount;

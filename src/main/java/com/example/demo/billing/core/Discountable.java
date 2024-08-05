@@ -20,14 +20,4 @@ public interface Discountable {
 	 */
 	public String discountDescription();
 	
-	/**
-	 * Calculates percentage value
-	 * 
-	 * @param productPrice
-	 * @param discount
-	 * @return
-	 */
-	default double percentageOfProductValue(double productPrice, int discount) {
-		return (productPrice * discount)/100;
-	}
 }
