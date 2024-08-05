@@ -8,10 +8,12 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.billing.core.DedicatedCustomerDiscount;
 import com.example.demo.billing.core.Discountable;
-import com.example.demo.billing.core.StoreAffiliateDiscount;
-import com.example.demo.billing.core.StoreEmployeeDiscount;
+import com.example.demo.billing.core.discounts.DedicatedCustomerDiscount;
+import com.example.demo.billing.core.discounts.GroceryBillDiscount;
+import com.example.demo.billing.core.discounts.StoreAffiliateDiscount;
+import com.example.demo.billing.core.discounts.StoreEmployeeDiscount;
+import com.example.demo.billing.dto.AvailableDiscount;
 import com.example.demo.billing.service.DiscountService;
 import com.example.demo.pojo.Cart;
 
@@ -45,13 +47,24 @@ public class DiscountServiceImpl implements DiscountService {
 		discountables.add(new StoreEmployeeDiscount(storeEmployeeDiscount));
 		discountables.add(new StoreAffiliateDiscount(storeAffiliateDiscount));
 		discountables.add(new DedicatedCustomerDiscount(dedicatedCustomerDiscount));
+		discountables.add(new GroceryBillDiscount(groceryBillDiscount));
 		
 		log.info("Available discounts: {}", discountables);
 	}
 	
 	@Override
-	public String calculateDiscount(Cart cart) {
-		return null;
+	public List<AvailableDiscount> calculateDiscount(Cart cart) {
+		
+		return discountables.parallelStream()
+				.map(discount -> {
+					return AvailableDiscount.builder()
+							.discountAmount(discount.calculateDiscount(cart))
+							.discountDetail(discount.discountDescription())
+							.build();
+				})
+				.filter(d -> d.getDiscountAmount() > 0)
+				.sorted((d1, d2) -> Double.compare(d2.getDiscountAmount(), d1.getDiscountAmount()))
+				.toList();
 	}
 
 }

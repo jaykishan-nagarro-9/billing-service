@@ -1,20 +1,12 @@
-package com.example.demo.billing.core;
+package com.example.demo.billing.core.discounts;
 
+import com.example.demo.billing.core.PercentageDiscount;
 import com.example.demo.pojo.Cart;
 
-public class StoreEmployeeDiscount implements Discountable {
+public class StoreEmployeeDiscount extends PercentageDiscount {
 
-	private int value;
-	
-	private String discount = String.format("Store emplyee discount %s percentage of total value", value);
-	
 	public StoreEmployeeDiscount(int storeEmployeeDiscount) {
-		this.value = storeEmployeeDiscount;
-	}
-
-	@Override
-	public String discountDescription() {
-		return discount;
+		super(storeEmployeeDiscount, "Store emplyee discount %s percentage of total value");
 	}
 
 	@Override
@@ -25,7 +17,7 @@ public class StoreEmployeeDiscount implements Discountable {
 				.map(item -> item.getQuantity() * item.getProduct().getPrice())
 				.mapToDouble(Double::valueOf)
 				.sum();
-			return percentageOfProductValue(sum, value);
+			return percentageOfProductValue(sum, this.getValue());
 		}
 		
 		return 0;

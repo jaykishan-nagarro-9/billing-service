@@ -1,23 +1,15 @@
-package com.example.demo.billing.core;
+package com.example.demo.billing.core.discounts;
 
+import com.example.demo.billing.core.PercentageDiscount;
 import com.example.demo.enums.ProductCategory;
 import com.example.demo.pojo.Cart;
 
-public class GroceryBillDiscount implements Discountable {
+public class GroceryBillDiscount extends PercentageDiscount {
 
-	private int value;
-	
-	private String discount = String.format("Discount of %s for grocery category items", value);
-	
 	public GroceryBillDiscount(int groceryBillDiscount) {
-		this.value = groceryBillDiscount;
+		super(groceryBillDiscount, "Discount of %s for grocery category items for every 100 bill");
 	}
 
-	@Override
-	public String discountDescription() {
-		return discount;
-	}
-	
 	@Override
 	public double calculateDiscount(Cart cart) {
 		
@@ -29,7 +21,7 @@ public class GroceryBillDiscount implements Discountable {
 		
 		if(sum > 100) {
 			sum = sum - (sum % 100);	//Value change from 945 to 900 as per discount rule
-			return percentageOfProductValue(sum, value);
+			return percentageOfProductValue(sum, this.getValue());
 		}
 		
 		return 0;
