@@ -48,3 +48,7 @@ Discount 20.0 (Reason: Discount of 5 for grocery category items for every 100 bi
 
 ## Filter implementation
 
+## Coverage Report
+Code is covering 100% business lines from service layer. And overall 60+ % due to POJO/DTO etc has not covered fully.
+
+<img width="559" alt="image" src="https://github.com/user-attachments/assets/1c1ec487-d7b1-4916-99d8-9a91337adfa5">
