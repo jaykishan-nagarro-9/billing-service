@@ -1,12 +1,9 @@
 package com.example.demo.handler;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import com.example.demo.billing.dto.AvailableDiscount;
 import com.example.demo.billing.exceptions.DiscountCalculationException;
 import com.example.demo.billing.service.DiscountService;
 import com.example.demo.pojo.Cart;
@@ -32,41 +29,7 @@ public class CartHandler {
 		log.info("Cart: {}", cart);
 		prettyPrintCart(cart);
 
-		List<AvailableDiscount> calculatedDiscount = discountService.calculateDiscount(cart);
-		List<AvailableDiscount> calculatedAdditionalDiscount = discountService.calculateAdditionalDiscount(cart);
-		
-		
-		double finalDiscount = 0;
-		finalDiscount += !CollectionUtils.isEmpty(calculatedDiscount) ? calculatedDiscount.get(0).getDiscountAmount() : 0;
-		finalDiscount += !CollectionUtils.isEmpty(calculatedAdditionalDiscount) ? calculatedAdditionalDiscount.get(0).getDiscountAmount() : 0;
-		
-		prettyPrintDiscountDetail(calculatedDiscount, calculatedAdditionalDiscount, finalDiscount);
-		
-		log.info("Availble Discounts: {}", calculatedDiscount);
-		
-		return finalDiscount;
-	}
-
-	/**
-	 * This method is to display available discount properly in console.
-	 * @param calculatedDiscount
-	 * @param calculatedAdditionalDiscount 
-	 * @param finalDiscount2 
-	 */
-	private void prettyPrintDiscountDetail(List<AvailableDiscount> calculatedDiscount, List<AvailableDiscount> calculatedAdditionalDiscount, double finalDiscount) {
-		
-		for (AvailableDiscount availableDiscount : calculatedDiscount) {
-			System.out.println(String.format("Discount %s (Reason: %s)", availableDiscount.getDiscountAmount(), availableDiscount.getDiscountDetail()));
-		}
-		
-		for (AvailableDiscount availableDiscount : calculatedAdditionalDiscount) {
-			System.out.println(String.format("Additional Discount: %s (Reason: %s)", availableDiscount.getDiscountAmount(), availableDiscount.getDiscountDetail()));
-		}
-		
-		System.out.println("Maximum discount: " + finalDiscount);
-		
-		System.out.println("=============================================");
-		
+		return discountService.calculateDiscount(cart);
 	}
 
 	/**

@@ -10,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.demo.billing.exceptions.DiscountCalculationException;
-import com.example.demo.billing.service.impl.DiscountServiceImpl;
 import com.example.demo.pojo.Cart;
 import com.example.demo.pojo.CartItem;
 import com.example.demo.pojo.Customer;
 
-@SpringBootTest(classes = {CartHandler.class, DiscountServiceImpl.class})
+@SpringBootTest
 class CartHandlerTest implements CartValuesProvider {
 
 	@Autowired
@@ -87,6 +86,14 @@ class CartHandlerTest implements CartValuesProvider {
 		Cart cart = createCart(customerEmployeeExistingNotAffiliated(), cartItemsForBakery());
 		
 		assertEquals(330, cartHandler.calculateDiscount(cart));
+	}
+	
+	@Test
+	void givenValidCartForAffiliatedCustomer_whenCalculateDiscount_thenSystemShouldProvideDiscountCalculation() {
+		
+		Cart cart = createCart(customerExistingAffiliatedNotEmployed(), cartItems2());
+		
+		assertEquals(95, cartHandler.calculateDiscount(cart));
 	}
 
 	private Cart createCart(Customer customer, List<CartItem> cartItems) {

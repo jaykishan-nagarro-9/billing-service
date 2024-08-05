@@ -1,62 +1,42 @@
 package com.example.demo.billing.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import com.example.demo.billing.core.Discountable;
-import com.example.demo.billing.core.discounts.DedicatedCustomerDiscount;
-import com.example.demo.billing.core.discounts.TotalBillDiscount;
-import com.example.demo.billing.core.discounts.StoreAffiliateDiscount;
-import com.example.demo.billing.core.discounts.StoreEmployeeDiscount;
 import com.example.demo.billing.dto.AvailableDiscount;
 import com.example.demo.billing.service.DiscountService;
+import com.example.demo.billing.service.OpenDiscountService;
 import com.example.demo.pojo.Cart;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class DiscountServiceImpl implements DiscountService {
 
-	private final List<Discountable> discountables = new ArrayList<Discountable>();
-	private final List<Discountable> additionalDiscounts = new ArrayList<Discountable>();
-	
-	/**
-	 * Percentage value of discount
-	 */
-	@Value("${billing.service.discount.store.employee}")
-	private int storeEmployeeDiscount;
-	
-	@Value("${billing.service.discount.store.affiliate}")
-	private int storeAffiliateDiscount;
-	
-	@Value("${billing.service.discount.dedicated.customer}")
-	private int dedicatedCustomerDiscount;
-	
-	@Value("${billing.service.discount.total.bill}")
-	private int totalBillDiscount;
-	
-	@EventListener(ApplicationReadyEvent.class)
-	public void doSomethingAfterStartup() {
-		log.info("Setup discounts");
-		
-		discountables.add(new StoreEmployeeDiscount(storeEmployeeDiscount));
-		discountables.add(new StoreAffiliateDiscount(storeAffiliateDiscount));
-		discountables.add(new DedicatedCustomerDiscount(dedicatedCustomerDiscount));
-		additionalDiscounts.add(new TotalBillDiscount(totalBillDiscount));
-		
-		log.info("Available discounts: {}", discountables);
-	}
+	@Autowired
+	private OpenDiscountService openDiscountService;
 	
 	@Override
-	public List<AvailableDiscount> calculateDiscount(Cart cart) {
+	public double calculateDiscount(Cart cart) {
 		
-		return discountables.parallelStream()
+		List<AvailableDiscount> calculatedDiscount = calculatePercentageDiscount(cart);
+		List<AvailableDiscount> calculatedAdditionalDiscount = calculateAdditionalDiscount(cart);
+		
+		
+		double finalDiscount = 0;
+		finalDiscount += !CollectionUtils.isEmpty(calculatedDiscount) ? calculatedDiscount.get(0).getDiscountAmount() : 0;
+		finalDiscount += !CollectionUtils.isEmpty(calculatedAdditionalDiscount) ? calculatedAdditionalDiscount.get(0).getDiscountAmount() : 0;
+		
+		prettyPrintDiscountDetail(calculatedDiscount, calculatedAdditionalDiscount, finalDiscount);
+		
+		return finalDiscount; 
+		
+	}
+	
+	private List<AvailableDiscount> calculatePercentageDiscount(Cart cart) {
+		
+		return openDiscountService.getPercentageDiscount().parallelStream()
 				.map(discount -> {
 					return AvailableDiscount.builder()
 							.discountAmount(discount.calculateDiscount(cart))
@@ -67,11 +47,11 @@ public class DiscountServiceImpl implements DiscountService {
 				.sorted((d1, d2) -> Double.compare(d2.getDiscountAmount(), d1.getDiscountAmount()))
 				.toList();
 	}
-	
+
 	@Override
 	public List<AvailableDiscount> calculateAdditionalDiscount(Cart cart) {
 		
-		return additionalDiscounts.parallelStream()
+		return openDiscountService.getAdditionalDiscount().parallelStream()
 				.map(discount -> {
 					return AvailableDiscount.builder()
 							.discountAmount(discount.calculateDiscount(cart))
@@ -81,6 +61,29 @@ public class DiscountServiceImpl implements DiscountService {
 				.filter(d -> d.getDiscountAmount() > 0)
 				.sorted((d1, d2) -> Double.compare(d2.getDiscountAmount(), d1.getDiscountAmount()))
 				.toList();
+	}
+	
+	
+	/**
+	 * This method is to display available discount properly in console.
+	 * @param calculatedDiscount
+	 * @param calculatedAdditionalDiscount 
+	 * @param finalDiscount2 
+	 */
+	private void prettyPrintDiscountDetail(List<AvailableDiscount> calculatedDiscount, List<AvailableDiscount> calculatedAdditionalDiscount, double finalDiscount) {
+		
+		for (AvailableDiscount availableDiscount : calculatedDiscount) {
+			System.out.println(String.format("Discount %s (Reason: %s)", availableDiscount.getDiscountAmount(), availableDiscount.getDiscountDetail()));
+		}
+		
+		for (AvailableDiscount availableDiscount : calculatedAdditionalDiscount) {
+			System.out.println(String.format("Additional Discount: %s (Reason: %s)", availableDiscount.getDiscountAmount(), availableDiscount.getDiscountDetail()));
+		}
+		
+		System.out.println("Maximum discount: " + finalDiscount);
+		
+		System.out.println("=============================================");
+		
 	}
 
 }

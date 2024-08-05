@@ -13,7 +13,7 @@ public interface DiscountService {
 	 * @param cart
 	 * @return
 	 */
-	List<AvailableDiscount> calculateDiscount(Cart cart);
+	double calculateDiscount(Cart cart);
 
 	List<AvailableDiscount> calculateAdditionalDiscount(Cart cart);
 
