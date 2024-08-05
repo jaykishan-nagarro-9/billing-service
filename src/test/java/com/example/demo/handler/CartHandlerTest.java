@@ -93,6 +93,17 @@ class CartHandlerTest implements CartValuesProvider {
 		assertEquals(1, discounts.size());
 		assertEquals(20, discounts.get(0).getDiscountAmount());
 	}
+	
+	@Test
+	void givenValidCartForBakeryProducts_whenCalculateDiscount_thenSystemShouldProvideDiscountCalculation() {
+		
+		Cart cart = createCart(customerEmployeeExistingNotAffiliated(), cartItemsForBakery());
+		
+		List<AvailableDiscount> discounts = cartHandler.calculateDiscount(cart);
+		
+		assertEquals(2, discounts.size());
+		assertEquals(285, discounts.get(0).getDiscountAmount());
+	}
 
 	private Cart createCart(Customer customer, List<CartItem> cartItems) {
 		

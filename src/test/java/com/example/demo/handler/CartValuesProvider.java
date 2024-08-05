@@ -62,6 +62,12 @@ public interface CartValuesProvider {
         		);
 	}
 	
+	default List<CartItem> cartItemsForBakery() {
+		return List.of(CartItem.builder().product(createProduct1Bakery()).quantity(3).build(),
+        		CartItem.builder().product(createProduct2Bakery()).quantity(4).build()
+        		);
+	}
+	
 	private Product createProduct1Bakery() {
 		return new Product("P1", 250, ProductCategory.BAKERY);
 	}
