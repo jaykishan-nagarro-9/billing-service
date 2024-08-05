@@ -46,6 +46,11 @@ Discount 20.0 (Reason: Discount of 5 for grocery category items for every 100 bi
 3. CartItem: Product, quantity
 4. Cart: List of CartItem, Customer
 
+Class diagram for the inter relation ship can be shown in below diagram.
+
+![Class Diagram drawio](https://github.com/user-attachments/assets/6a4eba4d-812e-4c5c-847b-1f1351266119)
+
+
 ## Filter implementation
 Class diagram for the filter implementation.
 ![Class Diagram drawio](https://github.com/user-attachments/assets/e521a3a4-4a02-4c5d-87e2-4d72aff83d03)
