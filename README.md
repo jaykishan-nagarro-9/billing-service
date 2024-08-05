@@ -78,6 +78,7 @@ Class diagram for the filter implementation.
 
 
 ## Coverage Report
-Code is covering 100% business lines from service layer. And overall 60+ % due to POJO/DTO etc has not covered fully.
+Code is covering 100% business lines from service layer. [Overall 90+ % due to POJO/DTO etc has not covered fully]
 
-<img width="559" alt="image" src="https://github.com/user-attachments/assets/1c1ec487-d7b1-4916-99d8-9a91337adfa5">
+<img width="551" alt="image" src="https://github.com/user-attachments/assets/94ef6da5-937f-476a-8ba7-ea1b4b0bf58a">
+
