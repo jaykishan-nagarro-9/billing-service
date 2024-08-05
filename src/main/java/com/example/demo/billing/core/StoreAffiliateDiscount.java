@@ -2,25 +2,20 @@ package com.example.demo.billing.core;
 
 import com.example.demo.pojo.Cart;
 
-public class StoreEmployeeDiscount implements Discountable {
+public class StoreAffiliateDiscount implements Discountable {
 
 	private int value;
 	
-	private String discount = String.format("Store emplyee discount %s percentage of total value", value);
+	private String discount = String.format("Store affiliate discount %s percentage of total value", value);
 	
-	public StoreEmployeeDiscount(int storeEmployeeDiscount) {
-		this.value = storeEmployeeDiscount;
+	public StoreAffiliateDiscount(int storeAffiliateDiscount) {
+		this.value = storeAffiliateDiscount;
 	}
-
-	@Override
-	public String discountDescription() {
-		return discount;
-	}
-
+	
 	@Override
 	public double calculateDiscount(Cart cart) {
 		
-		if(cart.getCustomer().isStoreEmployee()) {
+		if(cart.getCustomer().isStoreAffiliate()) {
 			double sum = cart.getCartItems().stream()
 				.map(item -> item.getQuantity() * item.getProduct().getPrice())
 				.mapToDouble(Double::valueOf)
@@ -29,6 +24,11 @@ public class StoreEmployeeDiscount implements Discountable {
 		}
 		
 		return 0;
+	}
+
+	@Override
+	public String discountDescription() {
+		return discount;
 	}
 
 }
