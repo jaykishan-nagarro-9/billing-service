@@ -15,7 +15,7 @@ public interface CartValuesProvider {
 	
 	default Customer customerNotAffiliateEmployeeExisting() {
 		return Customer.builder()
-				.name("Test Store user")
+				.name("Test New user")
 				.dob(LocalDate.now().minus(Period.ofDays(18*YEAR_DAYS)))
 				.registrationDate(LocalDate.now().minus(Period.ofDays(1*YEAR_DAYS)))
 				.isStoreAffiliate(false)
@@ -25,7 +25,7 @@ public interface CartValuesProvider {
 	
 	default Customer customerExistingAffiliatedNotEmployed() {
 		return Customer.builder()
-				.name("Test user")
+				.name("Test Affiliate user")
 				.dob(LocalDate.now().minus(Period.ofDays(18*YEAR_DAYS)))
 				.registrationDate(LocalDate.now().minus(Period.ofDays(2*YEAR_DAYS)))
 				.isStoreAffiliate(true)
@@ -51,7 +51,7 @@ public interface CartValuesProvider {
 	}
 	
 	default List<CartItem> cartItems2() {
-		return List.of(CartItem.builder().product(createProduct4Grocery()).quantity(5).build(),
+		return List.of(CartItem.builder().product(createProduct4Grocery()).quantity(6).build(),
         		CartItem.builder().product(createProduct1Bakery()).quantity(2).build()
         		);
 	}

@@ -15,4 +15,6 @@ public interface DiscountService {
 	 */
 	List<AvailableDiscount> calculateDiscount(Cart cart);
 
+	List<AvailableDiscount> calculateAdditionalDiscount(Cart cart);
+
 }

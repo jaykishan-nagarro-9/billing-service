@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.example.demo.billing.dto.AvailableDiscount;
 import com.example.demo.billing.exceptions.DiscountCalculationException;
 import com.example.demo.billing.service.impl.DiscountServiceImpl;
 import com.example.demo.pojo.Cart;
@@ -53,10 +52,7 @@ class CartHandlerTest implements CartValuesProvider {
 		
 		Cart cart = createCart(customerExistingAffiliatedNotEmployed(), cartItems1());
 		
-		List<AvailableDiscount> discounts = cartHandler.calculateDiscount(cart);
-		
-		assertEquals(2, discounts.size());
-		assertEquals(120, discounts.get(0).getDiscountAmount());
+		assertEquals(60, cartHandler.calculateDiscount(cart));
 	}
 
 	@Test
@@ -64,10 +60,7 @@ class CartHandlerTest implements CartValuesProvider {
 		
 		Cart cart = createCart(customerEmployeeExistingNotAffiliated(), cartItems2());
 		
-		List<AvailableDiscount> discounts = cartHandler.calculateDiscount(cart);
-		
-		assertEquals(3, discounts.size());
-		assertEquals(270, discounts.get(0).getDiscountAmount());
+		assertEquals(195, cartHandler.calculateDiscount(cart));
 	}
 
 	
@@ -77,10 +70,7 @@ class CartHandlerTest implements CartValuesProvider {
 		
 		Cart cart = createCart(customerNotAffiliateEmployeeExisting(), cartItems3());
 		
-		List<AvailableDiscount> discounts = cartHandler.calculateDiscount(cart);
-		
-		assertEquals(1, discounts.size());
-		assertEquals(10, discounts.get(0).getDiscountAmount());
+		assertEquals(20, cartHandler.calculateDiscount(cart));
 	}
 	
 	@Test
@@ -88,10 +78,7 @@ class CartHandlerTest implements CartValuesProvider {
 		
 		Cart cart = createCart(customerNotAffiliateEmployeeExisting(), cartItems2());
 		
-		List<AvailableDiscount> discounts = cartHandler.calculateDiscount(cart);
-		
-		assertEquals(1, discounts.size());
-		assertEquals(20, discounts.get(0).getDiscountAmount());
+		assertEquals(45, cartHandler.calculateDiscount(cart));
 	}
 	
 	@Test
@@ -99,10 +86,7 @@ class CartHandlerTest implements CartValuesProvider {
 		
 		Cart cart = createCart(customerEmployeeExistingNotAffiliated(), cartItemsForBakery());
 		
-		List<AvailableDiscount> discounts = cartHandler.calculateDiscount(cart);
-		
-		assertEquals(2, discounts.size());
-		assertEquals(285, discounts.get(0).getDiscountAmount());
+		assertEquals(330, cartHandler.calculateDiscount(cart));
 	}
 
 	private Cart createCart(Customer customer, List<CartItem> cartItems) {

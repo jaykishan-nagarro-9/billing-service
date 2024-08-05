@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.billing.core.Discountable;
 import com.example.demo.billing.core.discounts.DedicatedCustomerDiscount;
-import com.example.demo.billing.core.discounts.GroceryBillDiscount;
+import com.example.demo.billing.core.discounts.TotalBillDiscount;
 import com.example.demo.billing.core.discounts.StoreAffiliateDiscount;
 import com.example.demo.billing.core.discounts.StoreEmployeeDiscount;
 import com.example.demo.billing.dto.AvailableDiscount;
@@ -24,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DiscountServiceImpl implements DiscountService {
 
 	private final List<Discountable> discountables = new ArrayList<Discountable>();
+	private final List<Discountable> additionalDiscounts = new ArrayList<Discountable>();
 	
 	/**
 	 * Percentage value of discount
@@ -37,8 +38,8 @@ public class DiscountServiceImpl implements DiscountService {
 	@Value("${billing.service.discount.dedicated.customer}")
 	private int dedicatedCustomerDiscount;
 	
-	@Value("${billing.service.discount.grocery.bill}")
-	private int groceryBillDiscount;
+	@Value("${billing.service.discount.total.bill}")
+	private int totalBillDiscount;
 	
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() {
@@ -47,7 +48,7 @@ public class DiscountServiceImpl implements DiscountService {
 		discountables.add(new StoreEmployeeDiscount(storeEmployeeDiscount));
 		discountables.add(new StoreAffiliateDiscount(storeAffiliateDiscount));
 		discountables.add(new DedicatedCustomerDiscount(dedicatedCustomerDiscount));
-		discountables.add(new GroceryBillDiscount(groceryBillDiscount));
+		additionalDiscounts.add(new TotalBillDiscount(totalBillDiscount));
 		
 		log.info("Available discounts: {}", discountables);
 	}
@@ -56,6 +57,21 @@ public class DiscountServiceImpl implements DiscountService {
 	public List<AvailableDiscount> calculateDiscount(Cart cart) {
 		
 		return discountables.parallelStream()
+				.map(discount -> {
+					return AvailableDiscount.builder()
+							.discountAmount(discount.calculateDiscount(cart))
+							.discountDetail(discount.discountDescription())
+							.build();
+				})
+				.filter(d -> d.getDiscountAmount() > 0)
+				.sorted((d1, d2) -> Double.compare(d2.getDiscountAmount(), d1.getDiscountAmount()))
+				.toList();
+	}
+	
+	@Override
+	public List<AvailableDiscount> calculateAdditionalDiscount(Cart cart) {
+		
+		return additionalDiscounts.parallelStream()
 				.map(discount -> {
 					return AvailableDiscount.builder()
 							.discountAmount(discount.calculateDiscount(cart))
