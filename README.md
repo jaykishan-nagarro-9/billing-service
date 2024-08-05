@@ -34,7 +34,28 @@ Discount 150.0 (Reason: Store emplyee discount 30 percentage of non-grocery prod
 Discount 25.0 (Reason: Existing customer (more than 2 years) gets 5 percentage discount)
 Additional Discount: 45.0 (Reason: Discount of 5 for all category items on every 100 bill value)
 Maximum discount: 195.0
-==========================================
+=========================================
+Customer: Test New user
+Cart items: 
+-------------------
+P4 [GROCERY]: 6 x 80.0 = 480.0
+P1 [BAKERY]: 2 x 250.0 = 500.0
+-------------
+Total: 980.0
+Additional Discount: 45.0 (Reason: Discount of 5 for all category items on every 100 bill value)
+Maximum discount: 45.0
+=========================================
+Customer: Test Affiliate user
+Cart items: 
+-------------------
+P4 [GROCERY]: 6 x 80.0 = 480.0
+P1 [BAKERY]: 2 x 250.0 = 500.0
+-------------
+Total: 980.0
+Discount 50.0 (Reason: Store affiliate discount 10 percentage of total non-grocery product value)
+Additional Discount: 45.0 (Reason: Discount of 5 for all category items on every 100 bill value)
+Maximum discount: 95.0
+=========================================
 ```
 
 # Solution Design
